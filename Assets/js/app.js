@@ -1,5 +1,6 @@
 let customerDOM = document.querySelector("#customerDatas");
 let modalTitle=document.querySelector('.modal-title');
+let loanersDOM=document.querySelector('#loanersDOM');
 //getting Products
 class Customer {
 
@@ -16,9 +17,19 @@ class Customer {
       alert(error);
     }
   }
- 
-}
+  async getCustomerById(id)
+  {
+    try {
+        let customItem = await fetch("assets/js/db.json");
+        let customData = await customItem.json();
+        
+        return customData[id-1];
+      } catch (error) {
+        alert(error);
+      }
 
+  }
+}
 //Display Products
 
 class UI {
@@ -93,22 +104,57 @@ class UI {
     });
     customerDOM.innerHTML = result;
   }
- 
-}
+  displayLoanTable(loaners){
+    let loanersResult="";
+    loaners.forEach(loan=>{
+        loanersResult+=`
+        <tr>
+        <td >${loan.loaner}</td>
+        <td >${loan.amount.value} ${loan.amount.currency}</td>
+        <td>  <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          disabled
+          ${!loan.closed ? `checked` : ``}
+          value="" 
+          id="flexCheckDefault"
+        />
+      </div> 
+        </td>
+     <td >${loan.dueAmount.value!=0 ? loan.perMonth.value +` ` +  loan.perMonth.currency:`<span class="text-success font-weight-bold">Ödənilib</span>`}</td>
+        <td >${loan.dueAmount.value} ${loan.dueAmount.currency}</td>
+        <td >${loan.loanPeriod.start} - ${loan.loanPeriod.end}</td>
+      </tr>
 
+        `
+    })
+    loanersDOM.innerHTML=loanersResult;
+  }
+}
 
 
 document.addEventListener("DOMContentLoaded", () => {
   
   const ui = new UI();
   const customer = new Customer();
-
+  const filteritems=new FilterDatas();
   customer.getCustomers().then((data) => {
     UI.displayCustomers(data);
-
+  });
+  
+  window.addEventListener("click",function(e){
     
-   
-});
+    if(e.target.tagName=="BUTTON")
+    {
+        let dataid=e.target.getAttribute('data-id');
+        customer.getCustomerById(dataid).then(data=>{
+            ui.displayLoanTable(data.loans)
+        })
+    }
+    
+  })
+  
 
-})
+});
 
