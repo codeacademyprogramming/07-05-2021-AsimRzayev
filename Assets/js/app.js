@@ -3,6 +3,7 @@ let modalTitle=document.querySelector('.modal-title');
 let loanersDOM=document.querySelector('#loanersDOM');
 let btnLoanHistory=document.querySelector('.btnLoanHistory');
 let filterActiveLoan=document.querySelectorAll(".filterActiveLoan");
+let filterName=document.querySelector("#filterName");
 //getting Products
 class Customer {
 
@@ -65,7 +66,19 @@ class FilterDatas
           
     
     }
+    filterCustomerName(customers,filterNameparam)
+    {
+      
+  console.log(filterNameparam)
+      if(filterNameparam!=null)
+        customers=customers.filter(x=>x.name.toLowerCase().includes(filterNameparam.toLowerCase()) || x.surname.toLowerCase().includes(filterNameparam.toLowerCase() )); 
+         
+      this.filterActiveLoan(customers,filterActiveLoan);
+      UI.displayCustomers(customers);
+     
  
+    }
+
 
 }
 //Display Products
@@ -172,7 +185,6 @@ class UI {
 }
 
 
-
 document.addEventListener("DOMContentLoaded", () => {
   
   const ui = new UI();
@@ -181,6 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
   customer.getCustomers().then((data) => {
     UI.displayCustomers(data);
 
+    filterName.addEventListener("keyup",()=>{
+    
+      if(filterName.value!="")
+      filteritems.filterCustomerName(data,filterName.value)
+      
+    })
     for (let i = 0; i < Array.from(filterActiveLoan).length; i++) {
     
       filterActiveLoan=Array.from(filterActiveLoan);
@@ -190,8 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
 
-
-    
    
    
   });
