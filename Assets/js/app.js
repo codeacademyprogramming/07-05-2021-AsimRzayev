@@ -4,6 +4,8 @@ let loanersDOM=document.querySelector('#loanersDOM');
 let btnLoanHistory=document.querySelector('.btnLoanHistory');
 let filterActiveLoan=document.querySelectorAll(".filterActiveLoan");
 let filterName=document.querySelector("#filterName");
+let minValue=document.querySelector("#minValue");
+let maxValue=document.querySelector("#maxValue");
 //getting Products
 class Customer {
 
@@ -79,7 +81,19 @@ class FilterDatas
  
     }
 
-
+    filterMinMaxValue(customers,minValue=0,maxValue=100000000)
+    {
+      
+      if(maxValue==0)
+      {
+        maxValue=100000;
+      }
+      minValue=Number(minValue);
+      maxValue=Number(maxValue)
+      
+        customers=customers.filter(x=>x.salary.value>=Number(minValue) && x.salary.value<=Number(maxValue)); 
+         UI.displayCustomers(customers);
+    }
 }
 //Display Products
 
@@ -185,6 +199,7 @@ class UI {
 }
 
 
+
 document.addEventListener("DOMContentLoaded", () => {
   
   const ui = new UI();
@@ -199,6 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
       filteritems.filterCustomerName(data,filterName.value)
       
     })
+    minValue.addEventListener("keyup",MaxMinValue)
+    minValue.addEventListener("change",MaxMinValue)
+    minValue.addEventListener("click",MaxMinValue)
+
+    maxValue.addEventListener("keyup",MaxMinValue)
+    maxValue.addEventListener("change",MaxMinValue)
+    maxValue.addEventListener("click",MaxMinValue)
     for (let i = 0; i < Array.from(filterActiveLoan).length; i++) {
     
       filterActiveLoan=Array.from(filterActiveLoan);
@@ -208,6 +230,10 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
 
+    function MaxMinValue(){
+      filteritems.filterMinMaxValue(data,minValue.value,maxValue.value);
+    }
+    
    
    
   });
