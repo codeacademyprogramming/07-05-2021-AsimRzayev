@@ -210,7 +210,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     filterName.addEventListener("keyup",()=>{
     
-      if(filterName.value!="")
+      
+      filteritems.filterCustomerName(data,filterName.value)
+      
+    })
+    filterName.addEventListener("keydown",()=>{
+    
+      
       filteritems.filterCustomerName(data,filterName.value)
       
     })
