@@ -1,6 +1,8 @@
 let customerDOM = document.querySelector("#customerDatas");
 let modalTitle=document.querySelector('.modal-title');
 let loanersDOM=document.querySelector('#loanersDOM');
+let btnLoanHistory=document.querySelector('.btnLoanHistory');
+let filterActiveLoan=document.querySelectorAll(".filterActiveLoan");
 //getting Products
 class Customer {
 
@@ -29,6 +31,42 @@ class Customer {
       }
 
   }
+}
+class FilterDatas
+{
+    filterActiveLoan(customers,filterText)
+    {
+      
+  
+      
+                switch(filterText)
+                {
+                    case "All":
+                      UI.displayCustomers(customers);
+                      if(filterName.value!="")
+                      this.filterCustomerName(customers,filterName.value)
+                        
+                    break;
+                    case "Active":
+                         let aktive=customers.filter(x=>x.loans.filter(x=>x.closed!=true).length>1)
+                         UI.displayCustomers(aktive);
+                         if(filterName.value!="")
+                         this.filterCustomerName(aktive,filterName.value)
+                    break;
+                    case "Deactive":
+                    let deaktive=customers.filter(x=>x.loans.filter(x=>x.closed!=false).length>1)
+                        UI.displayCustomers(deaktive);
+                        if(filterName.value!="")
+                        this.filterCustomerName(deaktive,filterName.value)
+                    break;
+                }
+         
+            
+          
+    
+    }
+ 
+
 }
 //Display Products
 
@@ -134,6 +172,7 @@ class UI {
 }
 
 
+
 document.addEventListener("DOMContentLoaded", () => {
   
   const ui = new UI();
@@ -141,6 +180,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const filteritems=new FilterDatas();
   customer.getCustomers().then((data) => {
     UI.displayCustomers(data);
+
+    for (let i = 0; i < Array.from(filterActiveLoan).length; i++) {
+    
+      filterActiveLoan=Array.from(filterActiveLoan);
+      filterActiveLoan[i].addEventListener("change",function(e){
+          let filterText=e.target.value;
+          filteritems.filterActiveLoan(data,filterText);
+      })
+    }
+
+
+    
+   
+   
   });
   
   window.addEventListener("click",function(e){
@@ -155,6 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
   })
   
-
+ 
 });
 
